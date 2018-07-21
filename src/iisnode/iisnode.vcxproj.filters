@@ -301,6 +301,9 @@
     <ClInclude Include="cnodeglobalmodule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MakeString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="iisnode.def">

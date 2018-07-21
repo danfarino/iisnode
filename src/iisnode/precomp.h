@@ -46,6 +46,7 @@
 #include "cnodehttpstoredcontext.h"
 #include "cfilewatcher.h"
 #include "cnodedebugger.h"
+#include "MakeString.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -58,6 +59,28 @@ typedef LONG NTSTATUS;
 #endif
 
 typedef ULONG (NTAPI *RtlNtStatusToDosError) (NTSTATUS Status);
+
+
+// Change this to enable verbose logging
+//#define ENABLE_LOG_DEBUG
+
+
+#define _OUTPUT_DEBUG(msg) ( \
+	::OutputDebugStringW((MAKE_STRING( \
+		L"iisnode [~" << ::GetCurrentThreadId() << L"] " << \
+		MAKE_STRING(msg) << \
+		std::endl \
+		)).c_str()))
+
+
+#define LOG_INFO(msg) _OUTPUT_DEBUG(msg)
+#define LOG_ERROR(msg) _OUTPUT_DEBUG(L"ERROR: " << msg)
+
+#ifdef ENABLE_LOG_DEBUG
+#define LOG_DEBUG(msg) _OUTPUT_DEBUG(msg)
+#else
+#define LOG_DEBUG(msg)
+#endif
 
 #endif
 

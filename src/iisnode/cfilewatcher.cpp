@@ -625,8 +625,11 @@ BOOL CFileWatcher::ScanDirectory(WatchedDirectory* directory, BOOL unc)
     {
         if (unc == file->unc) 
         {
-            if (S_OK == CFileWatcher::GetWatchedFileTimestamp(file, &timestamp)
-                && 0 != memcmp(&timestamp, &file->lastWrite, sizeof FILETIME))
+			auto hr = CFileWatcher::GetWatchedFileTimestamp(file, &timestamp);
+			LOG_INFO("old timestamp=" <<
+				std::hex << file->lastWrite.dwHighDateTime << file->lastWrite.dwLowDateTime <<
+				", new timestamp=" << timestamp.dwHighDateTime << timestamp.dwLowDateTime);
+            if (S_OK == hr && 0 != memcmp(&timestamp, &file->lastWrite, sizeof FILETIME))
             {
                 if (file->yamlConfig)
                 {
