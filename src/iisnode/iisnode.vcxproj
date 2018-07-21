@@ -238,6 +238,7 @@ copy /y $(ProjectDir)\..\config\* $(ProjectDir)\..\..\build\$(Configuration)\$(P
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\test\functional\scripts\runNodeTest.bat" />

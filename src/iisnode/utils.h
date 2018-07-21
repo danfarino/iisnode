@@ -484,4 +484,6 @@ private:
     }
 };
 
+void FindFileRecursive(const std::wstring &searchSpec, const std::function<bool(const WIN32_FIND_DATAW &findData)> callback);
+
 #endif

@@ -244,8 +244,6 @@ HRESULT CFileWatcher::GetWatchedFileTimestamp(WatchedFile* file, FILETIME* times
 {
     HRESULT hr;
     WIN32_FILE_ATTRIBUTE_DATA attributes;
-    WIN32_FIND_DATAW findData;
-    HANDLE foundFile = INVALID_HANDLE_VALUE;
 
     if (file->wildcard)
     {
@@ -253,28 +251,19 @@ HRESULT CFileWatcher::GetWatchedFileTimestamp(WatchedFile* file, FILETIME* times
         // that way if any of the matching files changes, or matching files are added or removed, the timestamp will change as well
 
         RtlZeroMemory(timestamp, sizeof FILETIME);
-        foundFile = FindFirstFileW(file->fileName, &findData);
-        if (INVALID_HANDLE_VALUE != foundFile)
-        {
-            do
-            {
-                if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-                {
-                    timestamp->dwHighDateTime ^= findData.ftLastWriteTime.dwHighDateTime ^ findData.nFileSizeHigh;
-                    timestamp->dwLowDateTime ^= findData.ftLastWriteTime.dwLowDateTime ^ findData.nFileSizeLow;
-                    WCHAR* current = findData.cFileName;
-                    while (*current)
-                    {
-                        timestamp->dwLowDateTime ^= *current;
-                        current++;
-                    }
-                }
-            } while (FindNextFileW(foundFile, &findData));
 
-            ErrorIf(ERROR_NO_MORE_FILES != (hr = GetLastError()), hr);
-            FindClose(foundFile);
-            foundFile = NULL;
-        }
+		FindFileRecursive(file->fileName, [timestamp](auto findData) {
+			timestamp->dwHighDateTime ^= findData.ftLastWriteTime.dwHighDateTime ^ findData.nFileSizeHigh;
+			timestamp->dwLowDateTime ^= findData.ftLastWriteTime.dwLowDateTime ^ findData.nFileSizeLow;
+			WCHAR* current = findData.cFileName;
+			while (*current)
+			{
+				timestamp->dwLowDateTime ^= *current;
+				current++;
+			}
+
+			return true;
+		});
     }
     else
     {
@@ -284,12 +273,6 @@ HRESULT CFileWatcher::GetWatchedFileTimestamp(WatchedFile* file, FILETIME* times
 
     return S_OK;
 Error:
-
-    if (INVALID_HANDLE_VALUE != foundFile)
-    {
-        FindClose(foundFile);
-        foundFile = INVALID_HANDLE_VALUE;
-    }
 
     return hr;
 }
@@ -367,7 +350,7 @@ HRESULT CFileWatcher::WatchFile(PCWSTR directoryName, DWORD directoryNameLength,
             newDirectory->watchHandle,
             &newDirectory->info,
             sizeof newDirectory->info,
-            FALSE,
+            TRUE,
             FILE_NOTIFY_CHANGE_LAST_WRITE,
             NULL,
             &newDirectory->overlapped,
@@ -556,7 +539,7 @@ unsigned int CFileWatcher::Worker(void* arg)
                         current->watchHandle,
                         &current->info,
                         sizeof directory->info,
-                        FALSE,
+                        TRUE,
                         FILE_NOTIFY_CHANGE_LAST_WRITE,
                         NULL,
                         &current->overlapped,
