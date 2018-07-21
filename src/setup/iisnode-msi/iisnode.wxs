@@ -5,18 +5,18 @@
   <?define sourcedir="$(var.ProjectDir)..\..\..\build\$(var.Configuration)\x86\" ?>
   <?define isWin64="no" ?>
   <?if $(var.ProjectName) = iisnode-msi-full ?>
-  <?define productName="iisnode for iis 7.x (x86) full" ?>
+  <?define productName="iisnode for iis 7.x (x86, Sabio) full" ?>
   <?else?>
-  <?define productName="iisnode for iis 7.x (x86) core" ?>
+  <?define productName="iisnode for iis 7.x (x86, Sabio) core" ?>
   <?endif?>
   <?elseif $(var.Platform) = x64 ?>
   <?define sourcedir="$(var.ProjectDir)..\..\..\build\$(var.Configuration)\x64\" ?>
   <?define wowsourcedir="$(var.ProjectDir)..\..\..\build\$(var.Configuration)\x86\" ?>
   <?define isWin64="yes" ?>
   <?if $(var.ProjectName) = iisnode-msi-full ?>
-  <?define productName="iisnode for iis 7.x (x64) full" ?>
+  <?define productName="iisnode for iis 7.x (x64, Sabio) full" ?>
   <?else?>
-  <?define productName="iisnode for iis 7.x (x64) core" ?>
+  <?define productName="iisnode for iis 7.x (x64, Sabio) core" ?>
   <?endif?>
   <?endif?>
 

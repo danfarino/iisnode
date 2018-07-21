@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{e2c84d6a-20ea-48a8-858e-bdd64d98a94c}</ProjectGuid>
-    <OutputName>iisnode-full</OutputName>
+    <OutputName>iisnode-full-sabio</OutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <SuppressIces>ICE80;ICE61</SuppressIces>
